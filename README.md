@@ -11,6 +11,12 @@
 [![MongoDB](https://img.shields.io/badge/Database-MongoDB_Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![Groq LLaMA 3](https://img.shields.io/badge/AI_Engine-Groq_LLaMA_3-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://paprism-research-paper-analyzer.vercel.app/)
+[![API Backend](https://img.shields.io/badge/API_Backend-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://paprism-research-paper-analyzer-backend.onrender.com/)
+
+🚀 **Live App**: [https://paprism-research-paper-analyzer.vercel.app](https://paprism-research-paper-analyzer.vercel.app/)  
+📡 **Live API**: [https://paprism-research-paper-analyzer-backend.onrender.com](https://paprism-research-paper-analyzer-backend.onrender.com/)
+
 [Explore Features](#-what-is-paprism) • [How It Works](#-how-it-works-in-3-steps) • [Quick Start](#-quick-start-run-locally-in-5-minutes) • [Tech Architecture](#-under-the-hood-technical-architecture)
 
 </div>
