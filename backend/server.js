@@ -17,28 +17,45 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // CORS Configuration
-const allowedOrigins = [
-  process.env.CORS_ORIGIN || 'http://localhost:5173',
+const rawAllowedOrigins = [
+  process.env.CORS_ORIGIN,
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:3000',
   'https://paprism-research-paper-analyzer.vercel.app',
-];
+].filter(Boolean);
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
-      if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
-        return callback(null, true);
-      }
-      return callback(new Error('Blocked by CORS policy'));
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
+// Normalize by removing trailing slashes
+const normalizedAllowed = rawAllowedOrigins.map((o) => o.replace(/\/+$/, '').toLowerCase());
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (Postman, curl, server-to-server)
+    if (!origin) return callback(null, true);
+
+    const cleanOrigin = origin.replace(/\/+$/, '').toLowerCase();
+
+    // Check exact list, or match any *.vercel.app domain, or localhost
+    const isAllowed =
+      normalizedAllowed.includes(cleanOrigin) ||
+      cleanOrigin.endsWith('.vercel.app') ||
+      cleanOrigin.includes('localhost') ||
+      cleanOrigin.includes('127.0.0.1') ||
+      process.env.NODE_ENV !== 'production';
+
+    if (isAllowed) {
+      return callback(null, true);
+    }
+    return callback(null, false);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Body Parsing Middleware
 app.use(express.json({ limit: '10mb' }));

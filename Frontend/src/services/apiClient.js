@@ -8,7 +8,7 @@ export const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000,
+  timeout: 60000, // 60s to accommodate Render cloud instance wakeups
 });
 
 // Attach JWT Bearer token if user is authenticated
@@ -35,7 +35,18 @@ apiClient.interceptors.response.use(
       }
     }
 
-    const message = error.response?.data?.message || error.message || 'An unexpected error occurred';
+    let message = error.response?.data?.message;
+
+    if (!message) {
+      if (error.message === 'Network Error') {
+        message = 'Unable to connect to the server. The free cloud backend may be waking up from sleep (takes ~30s)—please try again in a few moments.';
+      } else if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+        message = 'Request timed out while waiting for server. Please try again.';
+      } else {
+        message = error.message || 'An unexpected error occurred';
+      }
+    }
+
     error.userMessage = message;
     return Promise.reject(error);
   }
